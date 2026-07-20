@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus indicator present (outline)</title>
+  <style>
+    /* A clear outline on focus → tier-1 detects a computed-style delta, so the
+       element is never even a candidate and no screenshot is taken.
+       Expected: 0 focus-indicator findings, 0 screenshots. */
+    button { background: #eee; color: #000; border: 1px solid #999; padding: 8px 14px; }
+    button:focus-visible { outline: 3px solid #1a73e8; outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <h1>Page</h1>
+  <button id="btn-1">First</button>
+  <button id="btn-2">Second</button>
+  <button id="btn-3">Third</button>
+</body>
+</html>

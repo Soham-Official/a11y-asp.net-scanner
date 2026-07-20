@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Modal with Broken Escape but Close Control</title>
+  <style>
+    .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: white; border: 2px solid black; padding: 20px; z-index: 1000; }
+    .modal[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Modal with Broken Escape</h1>
+  <button id="open-modal">Open Modal</button>
+  <div class="modal" role="dialog" aria-modal="true" id="modal" hidden>
+    <h2>Modal Title</h2>
+    <input type="text" id="modal-input" value="Input in modal">
+    <button id="modal-button">Action</button>
+    <button class="close" aria-label="Close dialog">Close</button>
+  </div>
+  <script>
+    const modal = document.getElementById('modal');
+    const openBtn = document.getElementById('open-modal');
+    const closeBtn = modal.querySelector('.close');
+
+    function focusable() {
+      return Array.from(modal.querySelectorAll('input, button'));
+    }
+
+    function open() {
+      modal.hidden = false;
+      document.getElementById('modal-input').focus();
+    }
+
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', function () {
+      modal.hidden = true;
+      openBtn.focus();
+    });
+
+    // Real focus trap: Tab cycles within the modal (Close button IS in the cycle).
+    modal.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      const items = focusable();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+    // BROKEN Escape: swallowed, does nothing.
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') e.preventDefault();
+    });
+
+    // Auto-open for testing.
+    setTimeout(open, 100);
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus off-screen — fixed element parked outside the viewport</title>
+  <style>
+    /* A real link (NOT a skip link — href is absolute, not "#id") that is
+       position:fixed far outside the viewport. Because it is fixed, neither the
+       browser's natural focus-scroll nor our explicit scrollIntoView() can bring
+       it into view. Expected: 1 "offscreen" violation, scrolledIntoViewFailed:true. */
+    #stranded { position: fixed; left: -9999px; top: -9999px; }
+  </style>
+</head>
+<body>
+  <h1>Top of page</h1>
+  <button id="top-btn">Top button</button>
+  <a id="stranded" href="https://example.com/deep">Stranded link</a>
+  <button id="bottom-btn">Bottom button</button>
+</body>
+</html>

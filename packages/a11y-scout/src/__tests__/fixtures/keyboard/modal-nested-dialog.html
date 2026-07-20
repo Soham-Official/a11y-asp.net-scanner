@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Modal — nested dialog (not a leak)</title>
+  <style>
+    .outer { position: fixed; top: 20%; left: 50%; transform: translate(-50%, 0);
+      background: #fff; border: 2px solid #333; padding: 20px; }
+    .inner { margin-top: 16px; background: #f3f3f3; border: 2px dashed #666; padding: 12px; }
+  </style>
+</head>
+<body>
+  <h1>Background page</h1>
+  <button id="bg-1">Background button 1</button>
+
+  <!-- An outer modal that CONTAINS a nested inner dialog. When Tab moves focus
+       from the outer dialog's controls into the nested (descendant) dialog,
+       that is NOT a leak — the nested-dialog guard must suppress it.
+       Expected: 0 modal-leak findings (focus never leaves the outer subtree). -->
+  <div class="outer" role="dialog" aria-modal="true" id="outer" aria-label="Outer">
+    <h2>Outer dialog</h2>
+    <input id="o-input" type="text" value="outer field" />
+    <div class="inner" role="dialog" id="inner" aria-label="Inner">
+      <h3>Nested dialog</h3>
+      <button id="i-ok">Inner OK</button>
+    </div>
+  </div>
+
+  <script>
+    // Trap focus within the OUTER subtree (which includes the nested dialog) so
+    // focus never reaches the background. The only boundary crossing is INTO the
+    // nested descendant dialog, which the nested-dialog guard must NOT flag.
+    const outer = document.getElementById('outer');
+    function items() { return Array.from(outer.querySelectorAll('input, button')); }
+    outer.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      const list = items();
+      const first = list[0];
+      const last = list[list.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+    document.getElementById('o-input').focus();
+  </script>
+</body>
+</html>

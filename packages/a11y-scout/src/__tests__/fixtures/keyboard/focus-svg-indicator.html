@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus indicator via SVG ring toggled on focus (tier-2 save)</title>
+  <style>
+    /* The button's own six tier-1 properties don't change on focus; instead an
+       inline SVG ring inside the button is revealed (visibility) on :focus.
+       Tier-1 flags a candidate; tier-2 screenshot-diff detects the SVG pixels
+       and suppresses. Expected: 0 findings. */
+    .btn { position: relative; outline: none; background: #eee; color: #000;
+      border: 1px solid #999; padding: 8px 18px; }
+    .btn .ring { position: absolute; inset: -4px; visibility: hidden; pointer-events: none; }
+    .btn:focus-visible .ring { visibility: visible; }
+  </style>
+</head>
+<body>
+  <h1>Page</h1>
+  <button class="btn" id="btn-1">
+    First
+    <svg class="ring" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+      <rect x="2" y="2" width="96" height="36" fill="none" stroke="#e8710a" stroke-width="4" />
+    </svg>
+  </button>
+  <button class="btn" id="btn-2">
+    Second
+    <svg class="ring" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+      <rect x="2" y="2" width="96" height="36" fill="none" stroke="#e8710a" stroke-width="4" />
+    </svg>
+  </button>
+</body>
+</html>

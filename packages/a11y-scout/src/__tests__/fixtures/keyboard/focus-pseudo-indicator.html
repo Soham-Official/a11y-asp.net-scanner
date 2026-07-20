@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus indicator via ::after pseudo-element (tier-2 save)</title>
+  <style>
+    /* No outline and no change to any of the six tier-1 computed-style
+       properties on the button itself — instead a ::after pseudo-element draws
+       a colored underline bar on focus. Tier-1 flags it as a candidate; tier-2
+       screenshot-diff DETECTS the pseudo-element's pixels and SUPPRESSES the
+       finding. Expected: 0 findings (the tier-2 save). */
+    button { position: relative; outline: none; background: #eee; color: #000;
+      border: 1px solid #999; padding: 8px 14px; }
+    button::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: -6px;
+      height: 4px; background: transparent;
+    }
+    button:focus-visible::after { background: #d81b60; }
+  </style>
+</head>
+<body>
+  <h1>Page</h1>
+  <button id="btn-1">First</button>
+  <button id="btn-2">Second</button>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Backward-only Keyboard Trap</title>
+</head>
+<body>
+  <h1>Backward-only Keyboard Trap Test</h1>
+  <p>Forward Tab exits naturally; Shift+Tab is trapped among the inputs.</p>
+  <input type="text" id="first" value="First field">
+  <input type="text" id="second" value="Second field">
+  <input type="text" id="last" value="Last field">
+  <script>
+    const first = document.getElementById('first');
+    const second = document.getElementById('second');
+    const last = document.getElementById('last');
+
+    // Trap ONLY the backward direction: Shift+Tab off the first field wraps to
+    // the last, so backward focus can never leave the group. Forward Tab is
+    // untouched and exits to the body/chrome normally.
+    first.addEventListener('keydown', function (e) {
+      if (e.key === 'Tab' && e.shiftKey) {
+        e.preventDefault();
+        last.focus();
+      }
+    });
+
+    // Escape does nothing.
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') e.preventDefault();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+.spinner {
+  animation-name: spin;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+.menu-item:focus {
+  color: #0055aa;
+}
+
+.tooltip:hover {
+  display: block;
+}
+
+html {
+  font-size: 14px;
+}
+
+.contrast-bad {
+  color: #777777;
+  background-color: #8a8a8a;
+  font-size: 14px;
+}
+
+.hidden-copy {
+  font-size: 0;
+}
+
+.forced-font {
+  font-size: 12px !important;
+}
+
+.tight-copy {
+  line-height: 1.2 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.layout-shell {
+  min-width: 960px;
+}
+
+button.small-hit {
+  width: 20px;
+  height: 20px;
+}

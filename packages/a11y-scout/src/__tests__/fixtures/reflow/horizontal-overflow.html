@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reflow violation — page overflows 320px width</title>
+  <style>
+    body { margin: 0; padding: 0; }
+    /* Force a 1200px-wide content block — guarantees horizontal scroll
+       at any viewport narrower than 1200px. This is the canonical 1.4.10
+       failure pattern: fixed-width container, no responsive layout. */
+    .wide-content {
+      width: 1200px;
+      background: #eee;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>1.4.10 Reflow Failure</h1>
+    <div class="wide-content">
+      <p>This block is hard-coded at 1200px wide. At a 320px viewport
+         the user must scroll horizontally to read it — a WCAG 1.4.10
+         (Reflow) violation.</p>
+    </div>
+  </main>
+</body>
+</html>

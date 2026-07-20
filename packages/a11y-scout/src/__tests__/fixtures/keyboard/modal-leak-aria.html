@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Modal leak — aria-modal=true with no focus trap</title>
+  <style>
+    .modal { position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
+      background: #fff; border: 2px solid #333; padding: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Background page</h1>
+  <button id="bg-1">Background button 1</button>
+  <button id="bg-2">Background button 2</button>
+
+  <!-- aria-modal="true" declares modality, but there is NO focus trap and the
+       background is NOT inert. Tab walks straight out of the dialog into the
+       background buttons. Expected: 1 blocker (modalKind: modal-true). -->
+  <div class="modal" role="dialog" aria-modal="true" id="modal" aria-label="Settings">
+    <h2>Settings</h2>
+    <input id="m-input" type="text" value="field" />
+    <button id="m-ok">OK</button>
+  </div>
+
+  <script>
+    // Open it: focus the first field. No keydown handler ⇒ Tab leaks freely.
+    document.getElementById('m-input').focus();
+  </script>
+</body>
+</html>

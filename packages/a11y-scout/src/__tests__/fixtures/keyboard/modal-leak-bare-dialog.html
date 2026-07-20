@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Modal leak — bare role=dialog (modality not declared)</title>
+  <style>
+    .panel { position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
+      background: #fff; border: 2px solid #333; padding: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Background page</h1>
+  <button id="bg-1">Background button 1</button>
+  <button id="bg-2">Background button 2</button>
+
+  <!-- A bare role="dialog": NO aria-modal, NOT opened via showModal(). Focus
+       leaving it may be legitimate (non-modal dialog). Expected: 1 REVIEW
+       finding (requiresHumanReview: true), not a blocker. -->
+  <div class="panel" role="dialog" id="panel" aria-label="Inline panel">
+    <h2>Inline panel</h2>
+    <input id="p-input" type="text" value="field" />
+    <button id="p-ok">OK</button>
+  </div>
+
+  <script>
+    document.getElementById('p-input').focus();
+  </script>
+</body>
+</html>

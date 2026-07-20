@@ -1,0 +1,16 @@
+{
+  "name": "@a11y-scout/example-playwright-demo",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Demo of using @a11y-scout/playwright as a drop-in fixture in an existing Playwright suite.",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@a11y-scout/playwright": "0.3.0",
+    "@playwright/test": "^1.49.0",
+    "a11y-scout": "0.3.0"
+  },
+  "license": "UNLICENSED"
+}

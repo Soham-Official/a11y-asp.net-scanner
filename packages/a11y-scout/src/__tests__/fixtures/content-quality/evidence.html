@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Untitled</title>
+</head>
+<body>
+  <h1>Section 1</h1>
+
+  <!-- Sensory characteristics target (1.3.3) -->
+  <p>Click the green button on the right to continue.</p>
+
+  <!-- Image with meaningless alt (1.1.1) -->
+  <img src="/photos/cat.png" alt="image" />
+  <!-- Decorative image with hasAlt=true and empty alt -->
+  <img src="/photos/dog.png" alt="" />
+  <!-- Image with no alt attribute -->
+  <img src="/photos/bird.png" />
+
+  <!-- Generic links (2.4.4) -->
+  <a href="/details">click here</a>
+  <a href="/more">read more</a>
+
+  <!-- Language of parts (3.1.2) -->
+  <p>The phrase <span lang="fr">bonjour le monde</span> is in French.</p>
+
+  <p>All fields required.</p>
+  <form>
+    <p>Please complete every section.</p>
+    <!-- Unlabeled email input (3.3.2) — also collects personal data without autocomplete (1.3.5) -->
+    <input id="signup_email" name="email" type="email" placeholder="you@example.com" required />
+
+    <!-- Labelled input with describedby instructions -->
+    <label for="signup_name">Full name</label>
+    <input id="signup_name" name="name" type="text" aria-describedby="signup_name_help" />
+    <span id="signup_name_help">As shown on your ID.</span>
+
+    <!-- 2.5.3 candidate: visible label "Submit order" but aria-label="Send" -->
+    <button type="submit" aria-label="Send">Submit order</button>
+  </form>
+
+  <!-- 3.3.1 / 3.3.3: error region -->
+  <div role="alert">Invalid input</div>
+
+  <!-- 4.1.2 etc. handled by axe; not tested here -->
+</body>
+</html>

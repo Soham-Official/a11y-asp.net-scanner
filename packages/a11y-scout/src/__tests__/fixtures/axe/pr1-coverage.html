@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PR1 axe coverage fixture</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* css-orientation-lock (1.3.4): rotate the viewport when held in portrait */
+    @media screen and (orientation: portrait) {
+      body { transform: rotate(90deg); }
+    }
+    /* target-size (2.5.8): ensure the small adjacent buttons are clearly
+       below the 24x24 px threshold AND closer than 24px to each other,
+       defeating axe's spacing exception. */
+    .toolbar { display: flex; gap: 2px; }
+    .toolbar button {
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      font-size: 10px;
+      line-height: 16px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>PR1 Axe Coverage Fixture</h1>
+
+    <!--
+      target-size (2.5.8): three adjacent 16x16 px buttons in a flex row with
+      only 2px gap between them. Below the 24x24 minimum and the spacing
+      exception (24px+ between targets) does not apply.
+    -->
+    <div class="toolbar" role="toolbar" aria-label="Format">
+      <button type="button" aria-label="Bold">B</button>
+      <button type="button" aria-label="Italic">I</button>
+      <button type="button" aria-label="Underline">U</button>
+    </div>
+
+    <!--
+      label-content-name-mismatch (2.5.3): visible text "Click here" is not a
+      substring of the accessible name "Submit form", so voice-control users
+      cannot say the visible label to activate the control.
+    -->
+    <p>
+      <button aria-label="Submit form">Click here</button>
+    </p>
+
+    <!--
+      color-contrast-enhanced (1.4.6): #757575 on white is ~4.6:1 — passes AA
+      (>=4.5:1) but fails AAA (>=7:1 for normal text).
+    -->
+    <p style="color:#757575;background:#ffffff;font-size:14px">
+      Mid-grey body copy that meets AA contrast but falls short of the
+      AAA enhanced 7:1 threshold for normal-weight text.
+    </p>
+  </main>
+</body>
+</html>

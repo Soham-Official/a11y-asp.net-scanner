@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus Not Obscured — fully covered (2.4.11 blocker)</title>
+  <style>
+    body { margin: 0; padding: 0; min-height: 1500px; }
+    /* Fixed banner at the top, 80px tall, opaque, full-width.
+       It will fully cover any focused element that ends up in the
+       0–80px region of the viewport. */
+    .sticky-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: #003366;
+      color: white;
+      z-index: 9999;
+      padding: 20px;
+    }
+    /* Push the rest of the page content below; but the focusable
+       below is positioned absolutely AT the very top so it ends up
+       behind the banner. */
+    .behind-banner {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 200px;
+      height: 30px;
+    }
+    main { padding-top: 100px; }
+  </style>
+</head>
+<body>
+  <div class="sticky-banner">Site banner — covers everything below it</div>
+
+  <!-- This button is positioned within the banner's screen real estate.
+       When it receives focus, all four corners of its bounding rect are
+       under the fixed banner → 2.4.11 blocker. -->
+  <button class="behind-banner" type="button">Hidden Behind Banner</button>
+
+  <main>
+    <h1>Visible Content</h1>
+    <a href="#x">Link 1</a>
+    <a href="#y">Link 2</a>
+  </main>
+</body>
+</html>

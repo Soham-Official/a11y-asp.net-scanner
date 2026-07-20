@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skip link — visible only on focus (must NOT be flagged)</title>
+  <style>
+    body { height: 2000px; }
+    /* Canonical accessible skip link: visually hidden off-screen by default,
+       but pulled into view on :focus. Because readFocusContext reads computed
+       style WHILE the element is focused, it reports visible/in-viewport and is
+       correctly NOT flagged. Expected: 0 focus-visibility findings. */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+    }
+    .skip-link:focus {
+      left: 8px;
+      top: 8px;
+      background: #000;
+      color: #fff;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <h1>Page</h1>
+  <button id="btn-1">Button 1</button>
+  <main id="main" tabindex="-1">
+    <button id="btn-2">Main button</button>
+  </main>
+</body>
+</html>

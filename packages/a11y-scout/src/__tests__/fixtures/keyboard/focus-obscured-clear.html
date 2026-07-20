@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus Not Obscured — no obstruction (pass)</title>
+  <style>
+    body { margin: 0; padding: 0; min-height: 1500px; }
+    /* Fixed banner exists but every focusable element is positioned
+       below it. No occlusion → 2.4.11 and 2.4.12 should both pass. */
+    .sticky-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #003366;
+      color: white;
+      z-index: 9999;
+      padding: 10px;
+    }
+    main { padding-top: 100px; }
+  </style>
+</head>
+<body>
+  <div class="sticky-banner">Site banner</div>
+  <main>
+    <h1>Visible Content</h1>
+    <button type="button">Clear Button</button>
+    <a href="#x">Link 1</a>
+    <a href="#y">Link 2</a>
+  </main>
+</body>
+</html>

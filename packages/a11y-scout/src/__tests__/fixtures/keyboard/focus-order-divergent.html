@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8"><title>Divergent focus order</title>
+  <style>button{display:block;width:200px;height:40px;margin:8px;}</style></head>
+  <body>
+    <!-- Visually a clean vertical column 1..8 top-to-bottom.
+         tabindex scrambles keyboard order to e.g. 5,1,8,3,6,2,7,4 — matches
+         neither DOM order (1..8) nor reading order (1..8). -->
+    <button tabindex="5">One</button>
+    <button tabindex="1">Two</button>
+    <button tabindex="8">Three</button>
+    <button tabindex="3">Four</button>
+    <button tabindex="6">Five</button>
+    <button tabindex="2">Six</button>
+    <button tabindex="7">Seven</button>
+    <button tabindex="4">Eight</button>
+  </body>
+</html>

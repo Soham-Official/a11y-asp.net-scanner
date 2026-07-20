@@ -1,0 +1,37 @@
+{
+  "name": "a11y-scout-monorepo",
+  "version": "0.3.1",
+  "private": true,
+  "description": "AI-powered WCAG accessibility scanner powered by the Hyland HAIP Model Gateway. Scans live URLs, source repos, and plugs into Playwright tests.",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "scan:url": "npm run --workspace=a11y-scout cli -- scan-url",
+    "scan:repo": "npm run --workspace=a11y-scout cli -- scan-repo",
+    "doctor": "npm run --workspace=a11y-scout cli -- doctor",
+    "cli": "npm run --workspace=a11y-scout cli --",
+    "smoke": "npm run --workspace=a11y-scout smoke",
+    "audit:axe-mappings": "npx tsx scripts/audit-axe-mappings.ts",
+    "dist": "bash generate-distribution.sh"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "author": "Hyland Software, Inc.",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/HylandExperience/a11y-scout.git"
+  }
+}

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keyboard Accessibility — All Test Cases</title>
+  <style>
+    :root { --ok:#16a34a; --review:#d97706; --blocker:#e11d48; --border:#d4d4d8; --bg:#fafafa; }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; line-height: 1.5;
+      margin: 0; padding: 0 0 80px; color: #18181b; background: var(--bg); }
+    header { background: #18181b; color: #fff; padding: 28px 24px; }
+    header h1 { margin: 0 0 6px; font-size: 1.5rem; }
+    header p { margin: 0; opacity: 0.8; font-size: 0.92rem; max-width: 760px; }
+    main { max-width: 880px; margin: 0 auto; padding: 24px; }
+    .case { background: #fff; border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px; margin: 20px 0; }
+    .case h2 { margin: 0 0 4px; font-size: 1.1rem; }
+    .case .desc { margin: 0 0 14px; font-size: 0.9rem; color: #52525b; }
+    .verdict { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: .04em;
+      text-transform: uppercase; padding: 3px 9px; border-radius: 999px; margin-bottom: 10px; }
+    .verdict.pass { background: color-mix(in srgb, var(--ok) 14%, #fff); color: var(--ok); }
+    .verdict.review { background: color-mix(in srgb, var(--review) 16%, #fff); color: var(--review); }
+    .verdict.blocker { background: color-mix(in srgb, var(--blocker) 14%, #fff); color: var(--blocker); }
+    .sc { font-size: 0.74rem; color: #71717a; margin-left: 8px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    input, button { font: inherit; padding: 7px 12px; border: 1px solid var(--border);
+      border-radius: 8px; background: #fff; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
+    nav.demo a { margin-right: 14px; }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; z-index: 900; }
+    .modal-backdrop.open { display: block; }
+    .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      background: #fff; border: 2px solid #18181b; border-radius: 12px; padding: 22px;
+      min-width: 320px; display: none; z-index: 901; }
+    .modal.open { display: block; }
+    .modal h3 { margin-top: 0; }
+    .modal .modal-row { display: flex; gap: 8px; margin-top: 14px; }
+    .note { font-size: 0.82rem; color: #71717a; background: #f4f4f5; border-radius: 8px;
+      padding: 10px 12px; margin-top: 12px; }
+    code { background: #f4f4f5; padding: 1px 5px; border-radius: 4px; font-size: 0.85em; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Keyboard Accessibility — All Test Cases</h1>
+    <p>
+      A reference page exercising every keyboard-trap detection case (WCAG 2.1.2). Inline (non-modal)
+      cases are detected automatically when you scan this page. Modal cases open via their buttons —
+      a scanner cannot click them, so open a modal first to scan it (or scan the individual fixtures).
+      Each section is labeled with the outcome a11y-scout should produce.
+    </p>
+  </header>
+
+  <main>
+    <!-- ============ CASE 1: real non-modal trap ============ -->
+    <section class="case">
+      <span class="verdict blocker">Blocker</span><span class="sc">WCAG 2.1.2 · auto-detected</span>
+      <h2>1. Real keyboard trap (non-modal)</h2>
+      <p class="desc">Tabbing off the last field re-focuses the first — forward focus can never leave this group. Escape is suppressed.</p>
+      <div class="controls" id="trap-real">
+        <input type="text" id="real-1" value="Real trap field 1" aria-label="Real trap field 1">
+        <input type="text" id="real-2" value="Real trap field 2" aria-label="Real trap field 2">
+        <input type="text" id="real-3" value="Real trap field 3" aria-label="Real trap field 3">
+      </div>
+    </section>
+
+    <!-- clearable elements between traps (exercise resume-at-next-unknown) -->
+    <section class="case">
+      <span class="verdict pass">Pass</span>
+      <h2>2. Normal focusable controls (no trap)</h2>
+      <p class="desc">A plain navigation region. Focus tabs through and exits cleanly to the page body.</p>
+      <nav class="demo">
+        <a href="#main">Skip link</a>
+        <a href="#one">Home</a>
+        <a href="#two">About</a>
+        <button id="plain-btn">A button</button>
+      </nav>
+    </section>
+
+    <!-- ============ CASE 3: backward-only trap ============ -->
+    <section class="case">
+      <span class="verdict blocker">Blocker</span><span class="sc">WCAG 2.1.2 · auto-detected (backward)</span>
+      <h2>3. Backward-only trap (Shift+Tab)</h2>
+      <p class="desc">Forward Tab exits fine, but Shift+Tab off the first field wraps to the last — backward focus is trapped.</p>
+      <div class="controls" id="trap-backward">
+        <input type="text" id="back-1" value="Backward trap field 1" aria-label="Backward trap field 1">
+        <input type="text" id="back-2" value="Backward trap field 2" aria-label="Backward trap field 2">
+        <input type="text" id="back-3" value="Backward trap field 3" aria-label="Backward trap field 3">
+      </div>
+    </section>
+
+    <!-- ============ CASE 4: single focusable ============ -->
+    <section class="case">
+      <span class="verdict pass">Pass</span>
+      <h2>4. Single focusable element</h2>
+      <p class="desc">Only one focusable control. Repeated Tab is normal browser behavior, not a trap.</p>
+      <div class="controls">
+        <button id="lonely-btn">The only button here</button>
+      </div>
+    </section>
+
+    <!-- ============ CASE 5: correct modal ============ -->
+    <section class="case">
+      <span class="verdict pass">Pass</span><span class="sc">WCAG 2.1.2 · open modal to scan</span>
+      <h2>5. Correct modal (escapable)</h2>
+      <p class="desc">Focus cycles within the dialog, but Escape closes it and restores focus to the trigger — a correct focus trap, not a violation.</p>
+      <div class="controls">
+        <button data-open="modal-correct">Open correct modal</button>
+      </div>
+    </section>
+
+    <!-- ============ CASE 6: modal, broken escape, has close ============ -->
+    <section class="case">
+      <span class="verdict review">Review</span><span class="sc">WCAG 2.1.2 · open modal to scan</span>
+      <h2>6. Modal — broken Escape, Close control present</h2>
+      <p class="desc">Escape does nothing, but a focusable “Close” sits in the tab cycle. The scanner can’t safely activate it, so it flags this for human review rather than a hard fail.</p>
+      <div class="controls">
+        <button data-open="modal-review">Open review modal</button>
+      </div>
+    </section>
+
+    <!-- ============ CASE 7: modal blocker ============ -->
+    <section class="case">
+      <span class="verdict blocker">Blocker</span><span class="sc">WCAG 2.1.2 · open modal to scan</span>
+      <h2>7. Modal — broken Escape, no close control</h2>
+      <p class="desc">Focus is trapped in the dialog, Escape is broken, and there is no close control anywhere in the cycle — an inescapable trap.</p>
+      <div class="controls">
+        <button data-open="modal-blocker">Open blocker modal</button>
+      </div>
+      <p class="note">
+        Note: this page intentionally violates WCAG 2.1.2 in several places for testing. Do not use it as
+        an example of accessible markup.
+      </p>
+    </section>
+
+    <!-- ============ CASE 8: always-open inline review dialog (auto-detected) ============ -->
+    <section class="case">
+      <span class="verdict review">Review</span><span class="sc">WCAG 2.1.2 · auto-detected</span>
+      <h2>8. Always-open dialog — broken Escape, Close present</h2>
+      <p class="desc">An inline dialog that is open at load (no trigger), so the scanner walks into it automatically. Focus is trapped, Escape is swallowed, but a focusable “Close” sits in the cycle — flagged for human <strong>review</strong>, not a hard fail.</p>
+      <div class="controls" role="dialog" aria-modal="true" aria-label="Inline review dialog" id="inline-review">
+        <input type="text" id="inline-input" value="Inline dialog field" aria-label="Inline dialog field">
+        <button id="inline-action">Action</button>
+        <button class="close" aria-label="Close dialog" id="inline-close">Close</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== MODALS ===================== -->
+  <div class="modal-backdrop" id="backdrop"></div>
+
+  <!-- Correct modal -->
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Correct modal" id="modal-correct">
+    <h3>Correct Modal</h3>
+    <input type="text" id="correct-input" value="Field" aria-label="Correct modal field">
+    <div class="modal-row">
+      <button id="correct-action">Action</button>
+      <button id="correct-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Review modal: broken escape, has close control -->
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Review modal" id="modal-review">
+    <h3>Broken-Escape Modal (has Close)</h3>
+    <input type="text" id="review-input" value="Field" aria-label="Review modal field">
+    <div class="modal-row">
+      <button id="review-action">Action</button>
+      <button class="close" aria-label="Close dialog" id="review-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Blocker modal: broken escape, no close control -->
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Blocker modal" id="modal-blocker">
+    <h3>Inescapable Modal (no Close)</h3>
+    <input type="text" id="blocker-input" value="Field" aria-label="Blocker modal field">
+    <div class="modal-row">
+      <button id="blocker-action">Action</button>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- Case 1: real non-modal trap ---------- */
+    (function () {
+      var first = document.getElementById('real-1');
+      var last = document.getElementById('real-3');
+      last.addEventListener('blur', function () {
+        setTimeout(function () { first.focus(); }, 10);
+      });
+    })();
+
+    /* ---------- Case 3: backward-only trap ---------- */
+    (function () {
+      var first = document.getElementById('back-1');
+      var last = document.getElementById('back-3');
+      first.addEventListener('keydown', function (e) {
+        if (e.key === 'Tab' && e.shiftKey) { e.preventDefault(); last.focus(); }
+      });
+    })();
+
+    /* ---------- Case 8: always-open inline review dialog ----------
+       Open at load (no trigger), so the scanner walks into it. Tab cycles
+       within the dialog, Escape is swallowed, but a focusable Close is in the
+       cycle -> classified as REVIEW (not a hard blocker). */
+    (function () {
+      var dialog = document.getElementById('inline-review');
+      var items = Array.prototype.slice.call(dialog.querySelectorAll('input, button'));
+      var firstEl = items[0];
+      var lastEl = items[items.length - 1];
+      dialog.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab') return;
+        if (e.shiftKey && document.activeElement === firstEl) { e.preventDefault(); lastEl.focus(); }
+        else if (!e.shiftKey && document.activeElement === lastEl) { e.preventDefault(); firstEl.focus(); }
+      });
+      // Broken Escape: swallowed within the dialog.
+      dialog.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') e.preventDefault();
+      });
+    })();
+
+    /* ---------- Modal machinery ---------- */
+    var backdrop = document.getElementById('backdrop');
+    var openModalEl = null;
+    var lastTrigger = null;
+
+    function focusablesIn(modal) {
+      return Array.prototype.slice.call(modal.querySelectorAll('input, button'));
+    }
+    function openModal(id, trigger) {
+      var modal = document.getElementById(id);
+      if (!modal) return;
+      lastTrigger = trigger || document.activeElement;
+      openModalEl = modal;
+      modal.classList.add('open');
+      backdrop.classList.add('open');
+      var f = focusablesIn(modal);
+      if (f[0]) f[0].focus();
+    }
+    function closeModal() {
+      if (!openModalEl) return;
+      openModalEl.classList.remove('open');
+      backdrop.classList.remove('open');
+      if (lastTrigger) lastTrigger.focus();
+      openModalEl = null;
+    }
+
+    // Trigger buttons
+    Array.prototype.forEach.call(document.querySelectorAll('[data-open]'), function (btn) {
+      btn.addEventListener('click', function () { openModal(btn.getAttribute('data-open'), btn); });
+    });
+
+    // Focus trap shared by all three modals (Tab cycles within the open modal).
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab' || !openModalEl) return;
+      var f = focusablesIn(openModalEl);
+      if (!f.length) return;
+      var firstEl = f[0], lastEl = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === firstEl) { e.preventDefault(); lastEl.focus(); }
+      else if (!e.shiftKey && document.activeElement === lastEl) { e.preventDefault(); firstEl.focus(); }
+    });
+
+    // Case 5 (correct): Escape closes + Close button works.
+    document.getElementById('correct-close').addEventListener('click', closeModal);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && openModalEl && openModalEl.id === 'modal-correct') closeModal();
+    });
+
+    // Case 6 (review): Close button works, but Escape is broken (swallowed).
+    document.getElementById('review-close').addEventListener('click', closeModal);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && openModalEl && openModalEl.id === 'modal-review') e.preventDefault();
+    });
+
+    // Case 7 (blocker): Escape broken, and no close control exists in the cycle.
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && openModalEl && openModalEl.id === 'modal-blocker') e.preventDefault();
+    });
+  </script>
+</body>
+</html>

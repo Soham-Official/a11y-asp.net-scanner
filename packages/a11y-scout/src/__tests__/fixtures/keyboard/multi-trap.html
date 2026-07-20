@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multiple Keyboard Traps</title>
+  <style>
+    .trap-region {
+      margin: 40px 0;
+      padding: 20px;
+      border: 2px solid #ccc;
+    }
+    .trap-top { background: #ffe0e0; }
+    .trap-middle { background: #e0ffe0; }
+    .trap-bottom { background: #e0e0ff; }
+  </style>
+</head>
+<body>
+  <h1>Multiple Keyboard Traps Test</h1>
+  <p>This page has THREE independent keyboard traps, with clearable elements between them.</p>
+
+  <!-- Clearable element before first trap -->
+  <button id="before-first">Clearable button before traps</button>
+
+  <!-- TRAP 1: Top region -->
+  <div class="trap-region trap-top" id="trap-top">
+    <h2>Trap 1 (Top)</h2>
+    <input type="text" id="trap1-input1" value="Trap 1 Field 1">
+    <input type="text" id="trap1-input2" value="Trap 1 Field 2">
+    <input type="text" id="trap1-input3" value="Trap 1 Field 3">
+  </div>
+
+  <!-- Clearable elements between trap 1 and trap 2 -->
+  <button id="between-1-2-a">Clearable button A</button>
+  <input type="text" id="between-1-2-b" value="Clearable input B">
+
+  <!-- TRAP 2: Middle region -->
+  <div class="trap-region trap-middle" id="trap-middle">
+    <h2>Trap 2 (Middle)</h2>
+    <input type="text" id="trap2-input1" value="Trap 2 Field 1">
+    <input type="text" id="trap2-input2" value="Trap 2 Field 2">
+    <button id="trap2-button">Trap 2 Button</button>
+  </div>
+
+  <!-- Clearable elements between trap 2 and trap 3 -->
+  <button id="between-2-3-a">Clearable button C</button>
+  <input type="text" id="between-2-3-b" value="Clearable input D">
+
+  <!-- TRAP 3: Bottom region -->
+  <div class="trap-region trap-bottom" id="trap-bottom">
+    <h2>Trap 3 (Bottom)</h2>
+    <input type="text" id="trap3-input1" value="Trap 3 Field 1">
+    <input type="text" id="trap3-input2" value="Trap 3 Field 2">
+    <input type="text" id="trap3-input3" value="Trap 3 Field 3">
+    <button id="trap3-button">Trap 3 Button</button>
+  </div>
+
+  <!-- Clearable element after last trap -->
+  <button id="after-last">Clearable button after traps</button>
+
+  <script>
+    // TRAP 1: Forward trap on the top region
+    // When focus leaves the last element, pull it back to the first
+    const trap1Last = document.getElementById('trap1-input3');
+    const trap1First = document.getElementById('trap1-input1');
+    trap1Last.addEventListener('blur', function() {
+      setTimeout(function() {
+        if (!document.querySelector('#trap-top').contains(document.activeElement)) {
+          trap1First.focus();
+        }
+      }, 10);
+    });
+
+    // TRAP 2: Forward trap on the middle region
+    // When focus leaves the button, pull it back to the first input
+    const trap2Last = document.getElementById('trap2-button');
+    const trap2First = document.getElementById('trap2-input1');
+    trap2Last.addEventListener('blur', function() {
+      setTimeout(function() {
+        if (!document.querySelector('#trap-middle').contains(document.activeElement)) {
+          trap2First.focus();
+        }
+      }, 10);
+    });
+
+    // TRAP 3: Forward trap on the bottom region
+    // When focus leaves the last button, pull it back to the first input
+    const trap3Last = document.getElementById('trap3-button');
+    const trap3First = document.getElementById('trap3-input1');
+    trap3Last.addEventListener('blur', function() {
+      setTimeout(function() {
+        if (!document.querySelector('#trap-bottom').contains(document.activeElement)) {
+          trap3First.focus();
+        }
+      }, 10);
+    });
+
+    // Block Escape key for all traps
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
+  </script>
+</body>
+</html>

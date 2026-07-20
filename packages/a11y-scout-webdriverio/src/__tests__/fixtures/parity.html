@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>a11y-scout WebdriverIO parity fixture</title>
+  </head>
+  <body>
+    <!-- Missing lang on <html> would need an attribute; add a couple of
+         reliable axe violations that both drivers must surface identically. -->
+
+    <!-- image-alt: <img> with no alt text -->
+    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" />
+
+    <!-- button-name: button with no accessible name -->
+    <button id="b1"></button>
+
+    <!-- Two more focusable controls so Tab / Shift+Tab have somewhere to go. -->
+    <a id="a1" href="#one">One</a>
+    <input id="i1" type="text" aria-label="search" />
+    <button id="b2">Submit</button>
+  </body>
+</html>

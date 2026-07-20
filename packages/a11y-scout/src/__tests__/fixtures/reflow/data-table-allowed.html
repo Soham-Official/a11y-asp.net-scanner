@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reflow pass — wide content is a data table (exception)</title>
+  <style>
+    body { margin: 0; padding: 0; }
+    /* The only thing forcing horizontal scroll is a wide data table.
+       1.4.10 explicitly exempts content that "by usage requires
+       two-dimensional layout" — tables are the canonical example. */
+    table { border-collapse: collapse; }
+    td, th { border: 1px solid #ccc; padding: 8px 16px; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Wide Data Table</h1>
+    <p>The page itself is responsive; only the data table extends past 320px.
+       This is an allowed exception under WCAG 1.4.10.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Column A — Long Heading</th>
+          <th>Column B — Long Heading</th>
+          <th>Column C — Long Heading</th>
+          <th>Column D — Long Heading</th>
+          <th>Column E — Long Heading</th>
+          <th>Column F — Long Heading</th>
+          <th>Column G — Long Heading</th>
+          <th>Column H — Long Heading</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>cell-data</td><td>cell-data</td><td>cell-data</td><td>cell-data</td>
+          <td>cell-data</td><td>cell-data</td><td>cell-data</td><td>cell-data</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

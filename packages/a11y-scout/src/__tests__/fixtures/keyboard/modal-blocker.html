@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Modal Blocker (no escape, no close control)</title>
+  <style>
+    .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: white; border: 2px solid black; padding: 20px; z-index: 1000; }
+    .modal[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Modal Blocker</h1>
+  <button id="open-modal">Open Modal</button>
+  <!-- A modal that traps focus, has a broken Escape, and NO close control:
+       no [aria-label*=close], no button.close, no [data-dismiss]. -->
+  <div class="modal" role="dialog" aria-modal="true" id="modal" hidden>
+    <h2>Modal Title</h2>
+    <input type="text" id="modal-input" value="Input in modal">
+    <button id="modal-action">Action</button>
+  </div>
+  <script>
+    const modal = document.getElementById('modal');
+    const openBtn = document.getElementById('open-modal');
+
+    function focusable() {
+      return Array.from(modal.querySelectorAll('input, button'));
+    }
+    function open() {
+      modal.hidden = false;
+      document.getElementById('modal-input').focus();
+    }
+    openBtn.addEventListener('click', open);
+
+    // Real focus trap: Tab cycles within the modal.
+    modal.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      const items = focusable();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+    // BROKEN Escape: swallowed, does nothing. No close control anywhere.
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') e.preventDefault();
+    });
+
+    setTimeout(open, 100);
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus on zero-area element</title>
+  <style>
+    /* A focusable link collapsed to zero width/height (a common "visually
+       hidden" anti-pattern that leaves the element in the tab order). It is
+       reachable by Tab but has no visible focus target. Expected: 1 "zero-area"
+       violation. Note: width/height:0 with overflow:hidden, NOT display:none. */
+    #tiny { display: inline-block; width: 0; height: 0; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <h1>Page</h1>
+  <button id="btn-1">Button 1</button>
+  <a id="tiny" href="https://example.com/x">Collapsed link</a>
+  <button id="btn-2">Button 2</button>
+</body>
+</html>

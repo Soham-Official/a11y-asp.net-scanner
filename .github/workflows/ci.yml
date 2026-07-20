@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      # Build runs `tsc` (not `tsc --noEmit`) for both workspaces in
+      # alphabetical order: a11y-scout first, then a11y-scout-playwright.
+      # This both typechecks and produces the dist/ that the fixture's TS
+      # resolution needs to find `a11y-scout` types.
+      - name: Build (typechecks both workspaces)
+        run: npm run build
+
+      - name: Smoke test (mock HAIP)
+        run: npm run smoke
+        env:
+          A11Y_HAIP_MOCK: "1"

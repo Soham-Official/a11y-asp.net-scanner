@@ -1,0 +1,58 @@
+{
+  "name": "a11y-scout",
+  "version": "0.3.1",
+  "description": "AI-powered WCAG accessibility scanner. Scans live URLs and source repos. Powered by Hyland HAIP.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "a11y-scout": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "cli": "tsx src/cli.ts",
+    "smoke": "tsx src/smoke.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.696.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "angular-eslint": "^22.0.0",
+    "axe-core": "^4.10.2",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "jsonrepair": "^3.14.0",
+    "openai": "^4.67.0",
+    "ora": "^8.1.0",
+    "playwright": "^1.49.0",
+    "postcss-selector-parser": "^6.1.2",
+    "uuid": "^11.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.0",
+    "@types/uuid": "^10.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^4.1.8"
+  },
+  "license": "UNLICENSED"
+}

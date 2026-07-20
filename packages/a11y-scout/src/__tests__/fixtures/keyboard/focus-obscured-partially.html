@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus Not Obscured — partial cover (2.4.12 AAA review)</title>
+  <style>
+    body { margin: 0; padding: 0; min-height: 1500px; }
+    /* Fixed banner 60px tall, opaque. It will cover the TOP HALF of the
+       focusable button (which is 40px tall positioned at top:40px),
+       leaving the bottom half visible. That's a 2.4.12 (Enhanced)
+       finding only — passes 2.4.11 (Min). */
+    .sticky-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #003366;
+      color: white;
+      z-index: 9999;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .partially-behind {
+      position: absolute;
+      top: 40px;
+      left: 20px;
+      width: 200px;
+      height: 40px;
+    }
+    main { padding-top: 100px; }
+  </style>
+</head>
+<body>
+  <div class="sticky-banner">Site banner — partial overlap</div>
+
+  <!-- Top edge sits at y=40, banner ends at y=60. Top 20px of button
+       is covered, bottom 20px is visible. → 2.4.12 fires, 2.4.11 doesn't. -->
+  <button class="partially-behind" type="button">Partially Covered</button>
+
+  <main>
+    <h1>Visible Content</h1>
+    <a href="#x">Link 1</a>
+  </main>
+</body>
+</html>

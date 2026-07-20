@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Keyboard accessibility regression — all issue types</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; }
+    section { margin: 20px 0; padding: 12px; border: 1px solid #ddd; }
+    h2 { font-size: 1rem; margin: 0 0 8px; }
+    button, input { font-size: 1rem; padding: 6px 12px; margin: 4px; }
+
+    /* Control: a clearly visible focus indicator → never flagged. */
+    .good:focus-visible { outline: 3px solid #1a73e8; outline-offset: 2px; }
+
+    /* Missing focus indicator → 2.4.7 review. No outline, no other style change.
+       Block-level with vertical spacing so each button sits on its own row,
+       well clear of its neighbour's padded tier-2 screenshot clip. */
+    .no-indicator { display: block; width: 220px; outline: none; background: #eee;
+      color: #000; border: 1px solid #999; margin: 28px 4px; }
+    .no-indicator:focus, .no-indicator:focus-visible { /* deliberately empty */ }
+
+    /* Invisible / off-screen focus targets → 2.4.3 severe.
+       Each gets a :focus outline so tier-1 sees a style delta and does NOT also
+       flag it as a missing-indicator candidate — keeps each demo to ONE issue. */
+    #offscreen { position: fixed; left: -9999px; top: -9999px; }
+    #opacity-zero { opacity: 0; }
+    #zero-area { display: inline-block; width: 0; height: 0; overflow: hidden; }
+    #offscreen:focus, #opacity-zero:focus, #zero-area:focus { outline: 2px solid #d81b60; }
+
+    .modal { background: #fff; border: 2px solid #333; padding: 12px; }
+  </style>
+</head>
+<body>
+  <h1>Keyboard accessibility regression page</h1>
+  <p>This page intentionally contains every keyboard issue a11y-scout detects.</p>
+
+  <!-- CONTROL — visible focus indicator, no issues. -->
+  <section>
+    <h2>Control (no issues)</h2>
+    <button class="good" id="good-1">Good button 1</button>
+    <button class="good" id="good-2">Good button 2</button>
+  </section>
+
+  <!-- 2.4.7 — missing focus indicator (review). -->
+  <section>
+    <h2>Missing focus indicator (WCAG 2.4.7)</h2>
+    <button class="no-indicator" id="ni-1">No indicator 1</button>
+    <button class="no-indicator" id="ni-2">No indicator 2</button>
+  </section>
+
+  <!-- 2.4.3 / 2.1.2 — modal focus leak, blocker (aria-modal=true, no focus trap).
+       Always open. Focus tabs through it and leaks to the content after it. -->
+  <section>
+    <h2>Modal focus leak — blocker (aria-modal=true, no trap)</h2>
+    <div class="modal" role="dialog" aria-modal="true" id="leak-blocker" aria-label="Leaky modal">
+      <input type="text" id="lb-input" value="modal field" aria-label="Modal field" />
+      <button id="lb-ok">Modal OK</button>
+    </div>
+  </section>
+
+  <!-- Spacer so the blocker leak above lands on a normal control, NOT on the
+       off-screen link below (which would suppress the off-screen finding as a
+       duplicate of the same focus landing). -->
+  <section>
+    <h2>Spacer control</h2>
+    <button class="good" id="spacer-leak">Spacer button A</button>
+  </section>
+
+  <!-- 2.4.3 — off-screen / invisible focus targets (severe). -->
+  <section>
+    <h2>Off-screen / invisible focus (WCAG 2.4.3)</h2>
+    <a id="offscreen" href="https://example.com/deep">Off-screen link</a>
+    <button id="opacity-zero">Transparent button (opacity:0)</button>
+    <a id="zero-area" href="https://example.com/x">Zero-area link</a>
+  </section>
+
+  <!-- 2.4.3 / 2.1.2 — modal focus leak, review (bare role=dialog, no aria-modal). -->
+  <section>
+    <h2>Modal focus leak — review (bare role=dialog)</h2>
+    <div class="modal" role="dialog" id="leak-review" aria-label="Inline panel">
+      <input type="text" id="lr-input" value="panel field" aria-label="Panel field" />
+      <button id="lr-ok">Panel OK</button>
+    </div>
+  </section>
+
+  <!-- A normal button so the bare-dialog leak above lands on a non-body element. -->
+  <section>
+    <h2>Spacer control</h2>
+    <button class="good" id="spacer">Spacer button</button>
+  </section>
+
+  <!-- 2.4.3 — geometric tab-order divergence (Point 4, review).
+       NOTE: This check is sensitive to the entire page's focus sequence. When
+       mixed with many other focusables, the divergence signal may not exceed
+       thresholds. For reliable regression testing of Point 4 specifically, use
+       the standalone fixture: focus-order-divergent.html (tested in focus-order.test.ts).
+       This section documents the issue type but may not always fire on this
+       combined regression page. -->
+  <section>
+    <h2>Focus order divergence — review (WCAG 2.4.3)</h2>
+    <p><em>See focus-order-divergent.html fixture for reliable Point 4 test.</em></p>
+    <style>
+      #focus-order-section button { display: block; width: 220px; height: 40px; margin: 8px; }
+    </style>
+    <div id="focus-order-section">
+      <button tabindex="5" id="fo-1">Button One</button>
+      <button tabindex="1" id="fo-2">Button Two</button>
+      <button tabindex="8" id="fo-3">Button Three</button>
+      <button tabindex="3" id="fo-4">Button Four</button>
+      <button tabindex="6" id="fo-5">Button Five</button>
+      <button tabindex="2" id="fo-6">Button Six</button>
+      <button tabindex="7" id="fo-7">Button Seven</button>
+      <button tabindex="4" id="fo-8">Button Eight</button>
+    </div>
+  </section>
+
+  <!-- 2.1.2 — modal keyboard trap, review (broken Escape, but a Close control
+       is present in the tab cycle). Traps Tab within the dialog. -->
+  <section>
+    <h2>Modal keyboard trap — review (broken Escape + Close control)</h2>
+    <div class="modal" role="dialog" aria-modal="true" id="trap-review" aria-label="Trapping modal">
+      <input type="text" id="tr-input" value="trapped field" aria-label="Trapped field" />
+      <button id="tr-close" aria-label="Close">×</button>
+    </div>
+  </section>
+
+  <!-- 2.1.2 — non-modal keyboard trap, blocker (Tab cannot leave, no Escape). -->
+  <section>
+    <h2>Non-modal keyboard trap — blocker</h2>
+    <div id="trap-blocker">
+      <input type="text" id="tb-1" value="field 1" aria-label="Trap field 1" />
+      <input type="text" id="tb-2" value="field 2" aria-label="Trap field 2" />
+    </div>
+  </section>
+
+  <script>
+    // Helper: confine Tab/Shift+Tab within a region (a focus trap).
+    function trapWithin(region) {
+      region.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab') return;
+        const items = Array.from(region.querySelectorAll('input, button'));
+        if (items.length === 0) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
+    }
+
+    // Modal review trap: traps Tab AND swallows Escape (broken), but has a Close
+    // control in the cycle → classified as review.
+    const trapReview = document.getElementById('trap-review');
+    trapReview.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { e.preventDefault(); } // broken Escape, scoped
+    });
+    trapWithin(trapReview);
+
+    // Non-modal blocker trap: traps Tab, no Escape handler → hard blocker.
+    trapWithin(document.getElementById('trap-blocker'));
+
+    // The leak modals (#leak-blocker, #leak-review) deliberately have NO trap,
+    // so focus tabs straight through and out of them.
+  </script>
+</body>
+</html>

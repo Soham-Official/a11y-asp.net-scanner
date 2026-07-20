@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Real Keyboard Trap</title>
+</head>
+<body>
+  <h1>Real Keyboard Trap Test</h1>
+  <p>This page has a real keyboard trap - focus cannot escape.</p>
+  <input type="text" id="first" value="First field">
+  <input type="text" id="second" value="Second field">
+  <input type="text" id="last" value="Last field">
+  <script>
+    // Re-focus first field when last field loses focus (trap)
+    document.getElementById('last').addEventListener('blur', function() {
+      setTimeout(function() {
+        document.getElementById('first').focus();
+      }, 10);
+    });
+    // Prevent Escape from working
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
+  </script>
+</body>
+</html>

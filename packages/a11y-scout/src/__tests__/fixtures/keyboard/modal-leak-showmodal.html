@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>showModal() enforces containment even with a buggy handler</title>
+</head>
+<body>
+  <h1>Background page</h1>
+  <button id="bg-1">Background button 1</button>
+  <button id="bg-2">Background button 2</button>
+
+  <!-- A top-layer modal (showModal() ⇒ :modal matches). The author wrote a
+       FAULTY handler that tries to push focus to a background button on Tab —
+       but because showModal() makes the background INERT, the browser refuses
+       to move focus there. Focus stays inside the dialog. This is the correct,
+       browser-enforced behavior. Expected: 0 modal-leak findings. (Confirms we
+       don't false-positive on a real top-layer modal — leaks out of one are
+       physically impossible, so the dialog-modal "blocker" branch is defensive.) -->
+  <dialog id="enforced" aria-label="Enforced dialog">
+    <h2>Dialog</h2>
+    <input id="d-input" type="text" value="field" />
+    <button id="d-ok">OK</button>
+  </dialog>
+
+  <script>
+    const dlg = document.getElementById('enforced');
+    dlg.addEventListener('keydown', function (e) {
+      if (e.key === 'Tab' && !e.shiftKey && document.activeElement.id === 'd-ok') {
+        // Buggy attempt to leak — the inert background blocks this focus().
+        e.preventDefault();
+        document.getElementById('bg-1').focus();
+      }
+    });
+    dlg.showModal();
+    document.getElementById('d-input').focus();
+  </script>
+</body>
+</html>

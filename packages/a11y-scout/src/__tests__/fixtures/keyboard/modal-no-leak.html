@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Modal — properly focus-trapped (no leak)</title>
+</head>
+<body>
+  <h1>Background page</h1>
+  <button id="bg-1">Background button 1</button>
+  <button id="bg-2">Background button 2</button>
+
+  <!-- A correctly focus-trapped top-layer modal. showModal() makes the
+       background inert AND the keydown handler wraps Tab/Shift+Tab within the
+       dialog. Expected: 0 modal-leak findings. (This is also a "good" focus
+       trap for 2.1.2: Escape closes it — but the test only opens it, doesn't
+       press Escape, and we assert no LEAK is reported.) -->
+  <dialog id="ok" aria-label="Good dialog">
+    <h2>Dialog</h2>
+    <input id="d-input" type="text" value="field" />
+    <button id="d-ok">OK</button>
+  </dialog>
+
+  <script>
+    const dlg = document.getElementById('ok');
+    function items() { return Array.from(dlg.querySelectorAll('input, button')); }
+    dlg.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      const list = items();
+      const first = list[0];
+      const last = list[list.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+    dlg.showModal();
+    document.getElementById('d-input').focus();
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus on opacity:0 element</title>
+  <style>
+    /* A button rendered with opacity:0 — it still takes layout and IS reachable
+       by Tab (unlike display:none / visibility:hidden), but is invisible to a
+       sighted keyboard user. Expected: 1 "opacity-zero" violation. */
+    #invisible { opacity: 0; }
+  </style>
+</head>
+<body>
+  <h1>Page</h1>
+  <button id="btn-1">Button 1</button>
+  <button id="invisible">Invisible action</button>
+  <button id="btn-2">Button 2</button>
+</body>
+</html>

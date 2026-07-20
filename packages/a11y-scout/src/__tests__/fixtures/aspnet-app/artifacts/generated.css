@@ -1,0 +1,5 @@
+button,
+a[role="button"] {
+  outline: none;
+  pointer-events: none;
+}
